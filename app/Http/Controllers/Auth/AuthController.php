@@ -35,9 +35,9 @@ class AuthController extends Controller {
       // return Redirect::to('dashboard');
       $githubUser = Socialite::driver('github')->user();
 
-      // dd($githubUser);
+      dd($githubUser->user);
 
-      $user = $this->findOrCreate
+      // $user = $this->findOrCreate
     }
 
     /**
