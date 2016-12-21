@@ -157,8 +157,9 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /*
-         * Github Auth App Provides...
+         * Github Auth App Providers...
          */
+        App\Providers\GithubServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],

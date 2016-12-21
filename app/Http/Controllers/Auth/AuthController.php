@@ -5,8 +5,17 @@ namespace App\Http\Controllers\Auth;
 use Socialite;
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Providers\GithubServiceProvider;
+// use App\Github;
 
 class AuthController extends Controller {
+
+    // protected $github;
+    //
+    // public function __construct(\App\Providers\GithubServiceProvider $github) {
+    //   $this->github = $github;
+    // }
+
     /**
      * Redirection to Github authentication
      *
@@ -34,10 +43,15 @@ class AuthController extends Controller {
       //
       // return Redirect::to('dashboard');
       $githubUser = Socialite::driver('github')->user();
+      // $gitHubUserRepos = $githubUser->user["repos_url"];
+      // $gitHubUserRepos = $github->getProfile($githubUser->name);
 
-      dd($githubUser->user);
+      // $client = new \GuzzleHttp\Client();
+      // $response = $client->request('GET', $gitHubUserRepos);
+      //
+      // $data = json_decode($response->getBody()->getContents(), true);
 
-      // $user = $this->findOrCreate
+      dd($githubUser);
     }
 
     /**
