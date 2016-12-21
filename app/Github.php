@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Github;
+namespace App;
 
 class Github {
 
@@ -17,10 +17,10 @@ class Github {
     ];
   }
 
-  public function getRepos($gitHubUserRepos)
+  public function getRepos($githubUsername)
   {
     $client = new \GuzzleHttp\Client();
-    $response = $client->request('GET', 'http://api.github.com/users/' . $gitHubUserRepos . '/repos');
+    $response = $client->request('GET', 'http://api.github.com/users/' . $githubUsername . '/repos');
 
     $data = json_decode($response->getBody()->getContents(), true);
 

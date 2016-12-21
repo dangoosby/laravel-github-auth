@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Auth;
 use Socialite;
 use App\User;
 use App\Http\Controllers\Controller;
-use App\Providers\GithubServiceProvider;
-// use App\Github;
+use View;
+use \App\Github;
 
 class AuthController extends Controller {
 
-    // protected $github;
-    //
-    // public function __construct(\App\Providers\GithubServiceProvider $github) {
-    //   $this->github = $github;
-    // }
+    protected $github;
+
+    public function __construct(\App\Github $github) {
+      $this->github = $github;
+    }
 
     /**
      * Redirection to Github authentication
@@ -30,28 +30,24 @@ class AuthController extends Controller {
      *
      * @return Response
      */
-    public function handleProviderCallback() {
-      // try {
-      //   $user = Socialite::driver('github')->user();
-      // } catch (Exception $e) {
-      //   return Redirect::to('auth/github');
-      // }
+    public function handleProviderCallback(Github $github) {
+      try {
+        $githubUser = Socialite::driver('github')->user();
+      } catch (Exception $e) {
+        return Redirect::to('auth/github');
+      }
       //
       // $authUser = $this->findOrCreateUser($user);
       //
       // Auth::login($authUser, true);
-      //
-      // return Redirect::to('dashboard');
-      $githubUser = Socialite::driver('github')->user();
-      // $gitHubUserRepos = $githubUser->user["repos_url"];
-      // $gitHubUserRepos = $github->getProfile($githubUser->name);
 
-      // $client = new \GuzzleHttp\Client();
-      // $response = $client->request('GET', $gitHubUserRepos);
-      //
-      // $data = json_decode($response->getBody()->getContents(), true);
+      $githubUsername = $githubUser->nickname;
+      $githubProfile = $github->getProfile($githubUsername);
+      $githubRepos = $github->getRepos($githubUsername);
 
-      dd($githubUser);
+      // dd($githubRepos);
+
+      return View::make('dashboard')->with('githubProfile', $githubProfile);
     }
 
     /**
