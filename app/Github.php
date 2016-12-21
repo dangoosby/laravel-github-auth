@@ -2,26 +2,35 @@
 
 namespace App;
 
+use GuzzleHttp\Client;
+
 class Github {
 
-  public function getProfile($githubUsername)
-  {
+  protected $client;
+
+  public function __construct() {
+    $this->client = new Client([
+      'base_uri' => 'http://api.github.com'
+    ]);
+  }
+
+  private function fromJson($response) {
+    return json_decode($response->getBody()->getContents(), true);
+  }
+
+  public function getProfile($githubUsername) {
+
     // Get Profile Info
-    $client_profile = new \GuzzleHttp\Client();
-    $response_profile = $client_profile->request('GET', 'http://api.github.com/users/' . $githubUsername);
-    $data_profile = json_decode($response_profile->getBody()->getContents(), true);
+    $data_profile = $this->fromJson($this->client->get("/users/{$githubUsername}"));
 
     // Get Repos
-    $client_repos = new \GuzzleHttp\Client();
-    $response_repos = $client_repos->request('GET', 'http://api.github.com/users/' . $githubUsername . '/repos');
-    $data_repos = json_decode($response_repos->getBody()->getContents(), true);
+    $data_repos = $this->fromJson($this->client->get("/users/{$githubUsername}/repos"));
 
     // Get Issues for each Repo and append the repo array
     $data_repos_final = [];
-    foreach ($data_repos as $repo ) {
-      $client_repo_issues = new \GuzzleHttp\Client();
-      $response_repo_issues = $client_repo_issues->request('GET', 'http://api.github.com/repos/' . $repo["full_name"] . '/issues');
-      $data_repo_issues = json_decode($response_repo_issues->getBody()->getContents(), true);
+
+    foreach ($data_repos as $repo) {
+      $data_repo_issues = $this->fromJson($this->client->get("/repos/{$repo["full_name"]}/issues"));
       $repo["issues_list"] = $data_repo_issues;
       array_push($data_repos_final, $repo);
     }
